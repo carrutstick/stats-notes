@@ -1,0 +1,178 @@
+\documentclass{beamer}
+
+\setkeys{Gin}{width=0.9\textwidth,height=0.7\textheight}
+
+\title{Statistics}
+\subtitle{As I Understand Them}
+\author{Isaac Carruthers}
+
+\begin{document}
+
+
+\frame{\titlepage}
+
+
+\frame{\frametitle{Distributions: What Are They?}
+\center{\emph{A distribution is a mapping from a set of mutually exclusive events to the chance 
+of observing each event.}}
+\pause
+
+\vspace{12pt}
+For instance, when you flip a coin, the distribution of outcomes is
+\center{\[\left\{H \rightarrow \frac12, T \rightarrow \frac12\right\}\]}
+}
+
+
+\frame{\frametitle{The Binomial Distribution}
+\center{The Binomial Distribution: flip $n$ biased coins (each with probability $p$ of landing
+on heads), what is the chance of getting $k$ heads in total?}
+\pause
+
+\begin{itemize}
+	\item $n=1$ is easy. We flip 1 coin, with chance $p$ of getting one head, and chance $1-p$ of
+	getting zero.\pause
+	\item $n=2$ has 4 cases: $HH$, $HT$, $TH$, $TT$. Because each flip is independent (one coin
+	does not affect the other), the probabilities of these are just $p^2$, $p(1-p)$, $(1-p)p$,
+	and $(1-p)^2$ respectively. In turn, the probabilities of getting 0, 1, or 2 heads is $p^2$,
+	$2p(1-p)$, and $(1-p)^2$. (Note the 2 ways of getting 1 head).\pause
+	\item $n=3$ has 8 cases\ldots which I'm not going to write out.\pause The general formula is
+\end{itemize}
+\begin{equation*}
+	P(K=k;n) = \frac{n!}{k!(n-k)!} p^k(1-p)^{n-k}
+\end{equation*}
+}
+
+
+\frame{\frametitle{The Binomial Distribution}
+\centering
+<<binomial,fig=TRUE,echo=FALSE>>=
+binplot <- function(n, prob) {
+	k <- 0:n
+	p <- dbinom(k, n, prob)
+	tit <- paste('n = ', n, ', p = ', prob)
+	plot(k, p, pch=16, bty='n', las=1, ylim=c(0, max(p)), main=tit, ylab='P(k)')
+	segments(k, 0, k, p)
+}
+par(mfrow=c(2,2))
+binplot(2, 0.5)
+binplot(5, 0.5)
+binplot(10, 0.5)
+binplot(20, 0.5)
+@
+}
+
+
+\frame{\frametitle{The Poisson Distribution}
+\begin{itemize}
+	\item The binomial distribution is saying ``I have $n$ opportunities for something to happen,
+	how likely is it to happen exactly $k$ times?'' \pause
+	\item What if we don't have discrete opportunities, but rather an event that could happen at
+	any moment? (Think lightning strikes, for instance). \pause
+	\item We can think of this like making $n$ very big, while at the same time makeing $p$ very
+	small, so that $np$ remains finite. (e.g. say $np\equiv\lambda$)\pause
+\end{itemize}
+\begin{equation*}
+	\lim_{n\rightarrow\infty} \frac{n!}{k!(n-k)!} p^k(1-p)^{n-k}
+	= \frac{e^{-\lambda}\lambda^k}{k!}
+\end{equation*}
+}
+
+
+\frame{\frametitle{The Poisson Distribution}
+\centering
+<<poisson,fig=TRUE,echo=FALSE>>=
+poissplot <- function(lambda) {
+	mx <- qpois(.999, lambda)
+	k <- 0:mx
+	p <- dpois(k, lambda)
+	tit <- paste0('lambda = ', lambda)
+	plot(k, p, pch=16, bty='n', las=1, ylim=c(0, max(p)), main=tit, ylab='P(k)')
+	segments(k, 0, k, p)
+}
+par(mfrow=c(2,2))
+poissplot(.1)
+poissplot(1)
+poissplot(5)
+poissplot(50)
+@
+}
+
+
+\frame{\frametitle{Continuous Distributions}
+\center{What if we don't have discrete events? What if we need to measure the probability of
+something continuous, like height, weight, or gender?}\pause
+\center{Such variables have ``continuous distributions''.}
+}
+
+
+\frame{\frametitle{Continuous Distributions}
+\begin{itemize}
+	\item $P(X=x)$ is called the ``probability mass function,'' or pmf of the distribution.\pause
+	\item In this case it's no longer useful to talk about $P(X=x)$, as the chance of a continuous
+	variable holding exactly a specific value is generally zero.\pause
+	\item For continuous distributions, we will work with the ``probability density function'' (pdf),
+	defined as \[p(x) = \frac{d}{dx} P(X \le x)\]\pause
+	\item We can also think of the pdf as
+	\[p(x) = \lim_{\epsilon\rightarrow0}\frac1\epsilon P(X\in [x, x+\epsilon])\]
+\end{itemize}
+}
+
+
+\frame{\frametitle{Continuous Distributions}
+\center{The crucial point is that once we have the pdf of a distribution, we can find the probability
+of our random variable $X$ inhabiting any possible set of values $A$.}
+\[P(X\in A) = \int_Ap(x) dx\]
+}
+
+
+\frame{\frametitle{Continuous Examples: Uniform Distribution}
+\center{The simplest continuous distribution is the uniform distribution, which has a constant pmf.}
+<<uniform,fig=TRUE,echo=FALSE>>=
+plot(NA, NA, xlim=c(-.5, 5.5), ylim=c(0, 1), bty='n', las=1, xlab='x', ylab='U(x;a,b)')
+unifplot <- function(left, right, col='black') {
+	height <- 1 / (right - left)
+	segments(c(-.25, 0, right), c(0, height, 0), c(0, right, 5.25), c(0, height, 0), col=col)
+	segments(c(0, right), c(0, 0), c(0, right), c(height, height), col=col, lty=2)
+	points(c(0, right), c(0, 0), col=col, bg='white', pch=1)
+	points(c(0, right), c(height, height), col=col, pch=16)
+}
+unifplot(0, 1)
+unifplot(0, 2, 'darkgreen')
+unifplot(0, 5, 'darkred')
+@
+}
+
+
+\frame{\frametitle{Continuous Examples: Normal Distribution}
+\centering
+The most pervasive continuous distribution is the (aptly named) normal distribution:
+\begin{equation*}
+	p(x;\mu,\sigma) = e^{\frac{(x - \mu)^2}{2\sigma^2}}
+\end{equation*}
+<<normal,fig=TRUE,echo=FALSE>>=
+x <- seq(-5, 5, length=1000)
+p <- exp(-x^2/2)
+plot(x, p, ty='l', bty='n', las=1)
+@
+}
+
+
+\frame{\frametitle{Fun Facts About the Normal Distribution}\pause
+\centering
+\begin{itemize}
+	\item Everything is a normal distribution (more on this in a moment).\pause
+	\item $\sigma$ is called the ``standard deviation'' of the distribution.\pause
+	\item There is roughly a 95\% chance of a value being within $2\sigma$ of $\mu$.\pause
+	\item This is where we get phrases like ``five sigma detection''.\pause
+\end{itemize}
+}
+
+
+\frame{\frametitle{Combining Distributions}
+\centering
+\begin{itemize}
+	\item Suppose we have 
+\end{itemize}
+}
+
+\end{document}
