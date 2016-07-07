@@ -1,5 +1,7 @@
 \documentclass{beamer}
 
+\usepackage{amsmath}
+
 \setkeys{Gin}{width=0.9\textwidth,height=0.7\textheight}
 
 \title{Statistics}
@@ -126,9 +128,9 @@ of our random variable $X$ inhabiting any possible set of values $A$.}
 
 
 \frame{\frametitle{Continuous Examples: Uniform Distribution}
-\center{The simplest continuous distribution is the uniform distribution, which has a constant pmf.}
+\center{The simplest continuous distribution is the uniform distribution, which has a constant pdf.}
 <<uniform,fig=TRUE,echo=FALSE>>=
-plot(NA, NA, xlim=c(-.5, 5.5), ylim=c(0, 1), bty='n', las=1, xlab='x', ylab='U(x;a,b)')
+plot(NA, NA, xlim=c(-.5, 5.5), ylim=c(0, 1), bty='n', las=1, xlab='x', ylab='P(x;a,b)')
 unifplot <- function(left, right, col='black') {
 	height <- 1 / (right - left)
 	segments(c(-.25, 0, right), c(0, height, 0), c(0, right, 5.25), c(0, height, 0), col=col)
@@ -170,9 +172,179 @@ plot(x, p, ty='l', bty='n', las=1)
 
 \frame{\frametitle{Combining Distributions}
 \centering
+Suppose we have multiple random variables, and want to know about events that involve all of them.
+\pause
 \begin{itemize}
-	\item Suppose we have 
+	\item We can say that they have a ``joint distribution,'' where each combination of values has
+	an associated probability.\pause
+	\item The core tool is going to be the ``joint pdf'' (or pmf) $p(x, y)$.\pause
+	\item The joint pdf can be defined analagously to the univariate pdf:
+	\[p(x,y)=\lim_{\epsilon\rightarrow0}\frac1{\epsilon^2}P(X\in[x,x+\epsilon],Y\in[y,y+\epsilon])\]
+	\item It also has the property\pause
+	\[P(X,Y\in A) = \iint_Ap(x,y)dxdy\]
+	\item The equivalent statement for the pmf is
+	\[P(X,Y\in A) = \sum_{x,y\in A} p(x, y)\]
 \end{itemize}
+}
+
+
+\frame{\frametitle{Combining Distributions}
+\centering
+Definition: \emph{Two random variables $x$ and $y$ are \textbf{independent} iff their joint pmf is the 
+product of their individual pmfs $p(x,y) = p(x)p(y)$}\pause\vspace{12pt}
+
+Consider our coin example. If the two flips ($F_1$ and $F_2$) don't affect each-other, then 
+$P(F_1=f_1,F_2=f_2)=P(F_1=f_1)P(F_2=f_2)=\frac14$.\pause\vspace{12pt}
+
+We can use our previous definitions to find the chance of getting exactly one head:
+\begin{align*}
+	P(F_1,F_2\in \{HT,TH\}) &= \sum_{f_1,f_2\in\{HT,TH\}} \frac14 \\&= \frac12
+\end{align*}
+}
+
+
+\frame{\frametitle{Combining Distributions}
+\centering
+What if we have some function of our variables, and we want to know what the distribution of that
+function is going to be?\pause
+
+\begin{align*}
+	p(g) \equiv \lim_{\epsilon\rightarrow0}P(G(X,Y) \in [g,g+\epsilon]) = \iint_{G(x,y)=g} p(x, y) dxdy
+\end{align*}\pause
+
+For example, suppose we have $X\sim U(0, 1)$, $Y\sim U(0,1)$, and we want to know the distribution
+of $G(X,Y) = X + Y$:
+\begin{align*}
+	p(g) &= \iint_{x+y=g} 1\,dxdy
+\end{align*}
+}
+
+
+\frame{\frametitle{Combining Distributions}
+\centering
+\begin{align*}
+	p(g) &= \iint_{x+y=g} 1\,dxdy
+\end{align*}
+<<unifsumdomain,fig=TRUE,echo=FALSE>>=
+plot(c(0,1), c(1,0), bty='n', las=1, type='l', xlim=c(0,1), ylim=c(0,1), xlab='x', ylab='y');
+                                      text(.55, .55, 'x + y = 1', adj=c(0.5, 0), srt=-45)
+lines(c(0,.5), c(.5, 0));             text(.3, .3, 'x + y = 0.5', adj=c(0.5, 0), srt=-45)
+lines(c(.5,1), c(1, .5));           text(.7, .7, 'x + y = 1.5', adj=c(0.5, 0), srt=-45)
+lines(c(0,1,1,0,0), c(0,0,1,1,0), col='gray')
+@
+}
+
+
+\frame{\frametitle{Combining Distributions}
+\centering
+\begin{align*}
+	p(g) &= \iint_{x+y=g} 1\,dxdy
+\end{align*}
+<<unifsum1,fig=TRUE,echo=FALSE>>=
+plot(c(0,1,2), c(0,1,0), bty='n', type='l', las=1, xlab='g', ylab='p(g)', ylim=c(0,1))
+text(0, 1, 'n = 2', adj=c(0, 1))
+@
+}
+
+
+\frame{\frametitle{Combining Distributions}
+\centering
+\begin{align*}
+	p(g) &= \iint_{x+y+z=g} 1\,dxdydz
+\end{align*}
+<<erwinhall,fig=FALSE,echo=FALSE>>=
+erwinhall <- function(x, n) {
+	a <- (1 / factorial(n - 1))
+	y <- 0 * x
+	for (ix in 1:(length(x))) {
+		b <- 0
+		for (k in 0:floor(x[[ix]])) {
+			b <- b + (-1)^k * choose(n, k) * (x[[ix]] - k)^(n - 1)
+		}
+		y[[ix]] <- a * b
+	}
+	y
+}
+@
+<<unifsum2,fig=TRUE,echo=FALSE>>=
+<<erwinhall>>
+x <- seq(0, 3, length=1000)
+y <- erwinhall(x, 3)
+plot(x, y, bty='n', type='l', las=1, xlab='g', ylab='p(g)', ylim=c(0,1))
+text(0, 1, 'n = 3', adj=c(0, 1))
+@
+}
+
+
+\frame{\frametitle{Combining Distributions}
+\centering
+What about with 4 variables?
+<<unifsum3,fig=TRUE,echo=FALSE>>=
+<<erwinhall>>
+x <- seq(0, 4, length=1000)
+y <- erwinhall(x, 4)
+plot(x, y, bty='n', type='l', las=1, xlab='g', ylab='p(g)', ylim=c(0,1))
+text(0, 1, 'n = 4', adj=c(0, 1))
+@
+}
+
+
+\frame{\frametitle{Combining Distributions}
+\centering
+What about with 10 variables?
+<<unifsum4,fig=TRUE,echo=FALSE>>=
+<<erwinhall>>
+x <- seq(0, 10, length=1000)
+y <- erwinhall(x, 10)
+plot(x, y, bty='n', type='l', las=1, xlab='g', ylab='p(g)', ylim=c(0,1))
+text(0, 1, 'n = 10', adj=c(0, 1))
+@
+}
+
+
+\frame{\frametitle{Combining Distributions}
+\centering
+Psych! It's just the normal distribution!
+<<unifsumcomp,fig=TRUE,echo=FALSE>>=
+<<erwinhall>>
+x <- seq(0, 10, length=1000)
+y <- erwinhall(x, 10)
+z <- dnorm(x, 5, sqrt(10/12.0))
+plot(x, y, bty='n', type='l', las=1, xlab='g', ylab='p(g)', ylim=c(0,1))
+lines(x, z, col='red', lty=2)
+text(0, 1, 'n = 10', adj=c(0, 1))
+text(10, 1, 'N(5, sqrt(10/12))', adj=c(1, 1), col='red')
+@
+}
+
+
+\frame{\frametitle{Combining Distributions}
+\begin{itemize}
+	\item Turns out, if you add together enough finite-variance random variables, the sum will
+	always have a normal distribution!\pause
+	\item This is called the Central Limit Theorem.\pause
+	\item This is also why, if we don't know how something is distributed, we generally assume that
+	it has a normal distribution.\pause
+	\item This can get you into real trouble though, if the underlying variables do not have finite
+	variance (see the financial industry), or if you're not adding together enough variables for
+	the central limit to be a good estimate.
+\end{itemize}
+}
+
+
+\frame{\frametitle{Homework}
+\begin{enumerate}
+	\item You have a 4-sided die and an 8-sided die, and roll each once. What is the chance that
+	the sum of your rolls is 7?
+	\item You roll your dice again, but this time you will continue to re-roll them as long as they
+	show the same value as each-other. Are your dice independent after your final roll? What is the
+	chance they sum to 7? What about 6?
+	\item Find the distribution of waiting times between lightning strikes. Assume that strikes are
+	independent, and occur with some average rate $\lambda$.
+	\textbf{Hint:} start with discrete time-bins,
+	find the distribution to waiting times between two time-bins that contain a strike, and then
+	take the limit as your bins get small.
+\end{enumerate}
 }
 
 \end{document}
