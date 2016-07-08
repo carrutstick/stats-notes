@@ -35,12 +35,12 @@ on heads), what is the chance of getting $k$ heads in total?}
 	getting zero.\pause
 	\item $n=2$ has 4 cases: $HH$, $HT$, $TH$, $TT$. Because each flip is independent (one coin
 	does not affect the other), the probabilities of these are just $p^2$, $p(1-p)$, $(1-p)p$,
-	and $(1-p)^2$ respectively. In turn, the probabilities of getting 0, 1, or 2 heads is $p^2$,
+	and $(1-p)^2$ respectively. In turn, the probabilities of getting 2, 1, or 0 heads is $p^2$,
 	$2p(1-p)$, and $(1-p)^2$. (Note the 2 ways of getting 1 head).\pause
 	\item $n=3$ has 8 cases\ldots which I'm not going to write out.\pause The general formula is
 \end{itemize}
 \begin{equation*}
-	P(K=k;n) = \frac{n!}{k!(n-k)!} p^k(1-p)^{n-k}
+	P(K=k;n,p) = \frac{n!}{k!(n-k)!} p^k(1-p)^{n-k}
 \end{equation*}
 }
 
@@ -112,8 +112,8 @@ something continuous, like height, weight, or gender?}\pause
 	\item $P(X=x)$ is called the ``probability mass function,'' or pmf of the distribution.\pause
 	\item In this case it's no longer useful to talk about $P(X=x)$, as the chance of a continuous
 	variable holding exactly a specific value is generally zero.\pause
-	\item For continuous distributions, we will work with the ``probability density function'' (pdf),
-	defined as \[p(x) = \frac{d}{dx} P(X \le x)\]\pause
+	\item For continuous distributions, we will work with the ``probability density function''
+    (pdf), defined as \[p(x) = \frac{d}{dx} P(X \le x)\]\pause
 	\item We can also think of the pdf as
 	\[p(x) = \lim_{\epsilon\rightarrow0}\frac1\epsilon P(X\in [x, x+\epsilon])\]
 \end{itemize}
@@ -121,14 +121,15 @@ something continuous, like height, weight, or gender?}\pause
 
 
 \frame{\frametitle{Continuous Distributions}
-\center{The crucial point is that once we have the pdf of a distribution, we can find the probability
-of our random variable $X$ inhabiting any possible set of values $A$.}
+\center{The crucial point is that once we have the pdf of a distribution, we can find the
+probability of our random variable $X$ inhabiting any possible set of values $A$.}
 \[P(X\in A) = \int_Ap(x) dx\]
 }
 
 
 \frame{\frametitle{Continuous Examples: Uniform Distribution}
-\center{The simplest continuous distribution is the uniform distribution, which has a constant pdf.}
+\center{The simplest continuous distribution is the uniform distribution, which has a constant
+pdf.}
 <<uniform,fig=TRUE,echo=FALSE>>=
 plot(NA, NA, xlim=c(-.5, 5.5), ylim=c(0, 1), bty='n', las=1, xlab='x', ylab='P(x;a,b)')
 unifplot <- function(left, right, col='black') {
@@ -149,7 +150,7 @@ unifplot(0, 5, 'darkred')
 \centering
 The most pervasive continuous distribution is the (aptly named) normal distribution:
 \begin{equation*}
-	p(x;\mu,\sigma) = e^{\frac{(x - \mu)^2}{2\sigma^2}}
+    p(x;\mu,\sigma) = \frac1{\sqrt{2\sigma^2\pi}} e^{-\frac{(x - \mu)^2}{2\sigma^2}}
 \end{equation*}
 <<normal,fig=TRUE,echo=FALSE>>=
 x <- seq(-5, 5, length=1000)
@@ -190,8 +191,8 @@ Suppose we have multiple random variables, and want to know about events that in
 
 \frame{\frametitle{Combining Distributions}
 \centering
-Definition: \emph{Two random variables $x$ and $y$ are \textbf{independent} iff their joint pmf is the 
-product of their individual pmfs $p(x,y) = p(x)p(y)$}\pause\vspace{12pt}
+Definition: \emph{Two random variables $x$ and $y$ are \textbf{independent} iff their joint pmf
+is the product of their individual pmfs $p(x,y) = p(x)p(y)$}\pause\vspace{12pt}
 
 Consider our coin example. If the two flips ($F_1$ and $F_2$) don't affect each-other, then 
 $P(F_1=f_1,F_2=f_2)=P(F_1=f_1)P(F_2=f_2)=\frac14$.\pause\vspace{12pt}
@@ -209,7 +210,8 @@ What if we have some function of our variables, and we want to know what the dis
 function is going to be?\pause
 
 \begin{align*}
-	p(g) \equiv \lim_{\epsilon\rightarrow0}P(G(X,Y) \in [g,g+\epsilon]) = \iint_{G(x,y)=g} p(x, y) dxdy
+	p(g) \equiv \lim_{\epsilon\rightarrow0}\frac1\epsilon P(G(X,Y) \in [g,g+\epsilon])
+    = \iint_{G(x,y)=g} p(x, y) dxdy
 \end{align*}\pause
 
 For example, suppose we have $X\sim U(0, 1)$, $Y\sim U(0,1)$, and we want to know the distribution
