@@ -1,0 +1,19 @@
+\documentclass{beamer}
+
+\author{Isaac Carruthers}
+\title{Statistics, As I Understand Them}
+\subtitle{Part 2: Estimators and Bayesian Inference}
+
+\setkeys{Gin}{width=0.9\textwidth,height=0.7\textheight}
+
+\begin{document}
+\frame{\titlepage}
+
+% Concepts:
+%% Population vs. sample statistics
+%% Estimators
+%% Likelihoods
+%% Confidence intervals
+%% Bayesian inference
+
+\end{document}

@@ -4,8 +4,8 @@
 
 \setkeys{Gin}{width=0.9\textwidth,height=0.7\textheight}
 
-\title{Statistics}
-\subtitle{As I Understand Them}
+\title{Statistics, As I Understand Them}
+\subtitle{Part 1: Distributions}
 \author{Isaac Carruthers}
 
 \begin{document}
@@ -347,6 +347,33 @@ text(10, 1, 'N(5, sqrt(10/12))', adj=c(1, 1), col='red')
 	find the distribution to waiting times between two time-bins that contain a strike, and then
 	take the limit as your bins get small.
 \end{enumerate}
+}
+
+
+\frame{\frametitle{Homework Solutions}
+\begin{enumerate}
+	\item 32 possible outcomes, 4 of which result in 7, so $\frac{4}{32}=\frac18$ chance.
+	\item Dice are no longer independent, as once you know the outcome of one dice, it may rule
+	out possible outcomes for the other. Now 28 options, of which 4 result in 7 and 3 result in 6,
+	so $\frac17$ and $\frac3{28}$ respectively.
+\end{enumerate}
+}
+
+\frame{\frametitle{Homework Solutions: Q3}
+\centering
+Start with bin-size $w$. When $w$ is small wrt. to $\lambda^{-1}$, the probability of a strike in a
+particular bin is roughly $w\lambda$.
+\vspace{12pt}
+
+The probability of going time $T$ without a strike, if we divide $T$ into $n$ small bins of width
+$\frac{T}{n}$, is $(1 - \frac{T}{n}\lambda)^{n}$.
+\vspace{12pt}
+
+If we take the limit of infinite, infinitely small bins, we get
+\[lim_{n\rightarrow\infty} \left(1 - \frac{T}{n}\right)^{n} = \lambda e^{-\lambda T}\]
+\vspace{12pt}
+
+This is called the \textbf{Exponential Distribution}.
 }
 
 \end{document}
