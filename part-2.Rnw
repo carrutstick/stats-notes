@@ -16,4 +16,151 @@
 %% Confidence intervals
 %% Bayesian inference
 
+
+\frame{\frametitle{What is Inference?}
+Last time we talked about distributions as a way to know how likely an outcome is.
+\pause
+\vspace{12pt}
+
+However, more often than not we don't know the particulars of the underlying distribution; all
+we have is a set of observations, and maybe a theory or a model.
+\pause
+\vspace{12pt}
+
+\textbf{Inference} is when we take our observations and use them to narrow down the possible
+shapes of the underlying distribution.
+}
+
+
+\frame{\frametitle{Population vs. Sample}
+\centering
+Supposed we have some random variable $X$.
+\vspace{12pt}
+
+The \textbf{population} $X$ encompasses all possible draws from this distribution.
+\vspace{12pt}
+
+The \textbf{sample} $x_1, x_2, \ldots x_n$ is a specific set of instances drawn from the
+distribution.\pause
+\vspace{12pt}
+
+Where this gets confusing is that there is also a \textbf{population of samples} $\vec X$, where
+each draw from $\vec X$ is a vector of draws from $X$.
+}
+
+
+\frame{\frametitle{Estimators}
+\centering
+An \textbf{estimator} is anything we compute from the sample to try to discover something about
+the population.
+\vspace{12pt}
+
+Again, we will make things complicated by talking about \textbf{populations and samples of
+estimators}.
+\vspace{12pt}
+
+Consider some estimator $\hat g\equiv G(\vec x)$, where $\vec x$ is a set of samples from $X$;
+we can now treat $\hat g$ as a random varible in its own right!
+}
+
+
+\frame{\frametitle{Estimators Example}
+\centering
+Suppose we have distribution $X\sim \mathcal{N}(\mu,\sigma)$ and sample $\vec x = (x_1, x_2, ...
+x_N)$
+\vspace{12pt}
+
+Define the following estimator:
+\[\hat\mu = \bar x = \frac1N\sum_{n=1}^N x_n\]
+It is easy to prove that, in the population of all possible samples, the average value of our
+estimator is
+\[E[\hat \mu] = \mu\]
+
+When the expected sample value of an estimator is equal to the population value, we say that the
+estimator is \textbf{unbiased}.
+}
+
+
+\frame{\frametitle{Likelihoods}
+\centering
+Suppose we have our sample $\vec x$, where $X\sim\mathcal P(\lambda)$, but we don't know $\lambda$
+\vspace{12pt}
+
+We obviously cannot find $\lambda$ precisely from a finite sample, but perhaps we can create a
+distribution $P(\lambda|\vec x)$ for the possible values of $\lambda$, given the sample $\vec x$.
+\vspace{12pt}
+
+We start with what's called the \textbf{likelihood} of our sample $\vec x$: $P(\vec x|\lambda)$.
+\vspace{12pt}
+
+The likelihood tells us the probability of getting some sample given some fixed value of
+$\lambda$, but it also gives us some measure of how likely a fixed sample $\vec x$ is to have
+been produced by a distribution with some $\lambda$
+}
+
+
+\frame{\frametitle{Likelihood}
+\centering
+Suppose we draw once from our poisson distribution, and get 5. Our likelihood function for
+$\lambda$ looks like
+
+<<poisslike,fig=TRUE,echo=FALSE>>=
+l <- seq(0, 20, length=1000)
+y <- dpois(5, l)
+plot(l, y, bty='n', type='l', las=1, xlab='Lambda', ylab='P( {5} | lambda )')
+@
+}
+
+
+\frame{\frametitle{Likelihood}
+\centering
+Important note: likelihoods are not probabilities!
+\vspace{12pt}\pause
+
+In particular:
+\[\int_0^\infty P(\vec x|\lambda) d\lambda \neq 1\]
+%Instead, we can use
+%\[\frac{P(\vec x|\lambda)}{\int_0^\infty P(\vec x|\lambda)d\lambda}\]
+}
+
+
+\frame{\frametitle{Maximum Likelihood Estimator}
+\centering
+The \textbf{Maximum Likelihood Estimator} (or MLE) is the value of a parameter most likely to
+produced the observed sample.
+<<poissmle,fig=TRUE,echo=FALSE>>=
+<<poisslike>>
+abline(v=5, lty=2, col='red')
+text(5, 0, 'MLE = 5', adj=c(0,0), srt=90)
+@
+}
+
+
+\frame{\frametitle{Bayesian Inference}
+\centering
+We can use likelihoods of observed evidence to inform our prior beliefs about some property by
+using Bayes' rule:
+\[P(\lambda|\vec x) = \frac{P(\vec x|\lambda)P(\lambda)}{P(\vec x)}\]
+Here, $P(\vec x|\lambda)$ is our likelihood, $P(\lambda)$ is called our \textbf{prior}
+distribution over our parameter $\lambda$, $P(\lambda|\vec x)$ is called the \textbf{posterior}
+distribution, and $P(\vec x)$ can be seen as just a normalization factor:
+\[P(\vec x) = \int_\lambda P(\vec x|\lambda) P(\lambda) d\lambda\]
+}
+
+
+\frame{\frametitle{Maximum A Posteriori Estimator}
+\centering
+The value of $\lambda$ that maximizes $P(\lambda|\vec x)$ is called the \textbf{maximum a
+posteriori} estimator, often called the MAP estimator.
+}
+
+
+\frame{\frametitle{Homework}
+Suppose you are trying to estimate some parameter $\gamma$. Your prior distribution for $\gamma$
+is $\mathcal N(\mu_0, \sigma_0)$, but you observe evidence $\vec x$ such that $P(\vec x|\gamma)$
+has the form
+\[\frac1{\sigma\sqrt{2\pi}} \exp\left(-\frac{(\gamma - \mu_1)^2}{2\sigma_1^2}\right).\]
+What is the posterior distribution of $\gamma$, given this evidence?
+}
+
 \end{document}
