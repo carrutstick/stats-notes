@@ -1,0 +1,113 @@
+\documentclass{beamer}
+
+\usepackage{amsmath}
+
+\author{Isaac Carruthers}
+\title{Statistics, As I Understand Them}
+\subtitle{Part 3: Conjugate Priors and Interpretation of Distributions}
+
+\setkeys{Gin}{width=0.9\textwidth,height=0.7\textheight}
+
+\begin{document}
+\frame{\titlepage}
+
+\frame{\frametitle{Quick Review}
+\centering
+We often want to estimate some parameter $\lambda$ by combining our prior expectations
+$P(\lambda)$, observations $\vec x$, and model of how observations are generated
+$P(\lambda|\vec x)$.
+\vspace{12pt}\pause
+
+We do this with \emph{Bayesian Inference:}
+\[P(\lambda|\vec x) = \frac{P(\vec x|\lambda)P(\lambda)}{
+    \int_\lambda P(\vec x|\lambda) P(\lambda) d\lambda}\]
+}
+
+
+\frame{\frametitle{Quick Review}
+\centering
+<<poissinfer,fig=TRUE,echo=FALSE>>=
+right <- 2.5
+dx <- .01
+x <- seq(from=-.1, to=right, by=dx)
+p <- dpois(x=1, lambda=x)
+plot(xlim=c(-.1, right), ylim=c(0,2), x=NULL, y=NULL,
+     xlab="Lambda", ylab="Probability Density", bty='n', las=1)
+segments(c(-.1, 0, 1), c(0, 1, 0), c(0, 1, right), c(0, 1, 0), col='black')
+points(c(0, 0, 1, 1), c(0, 1, 1, 0), pch=21, col='black', bg=c('white','black','black','white'))
+@
+}
+
+
+\frame{\frametitle{Quick Review}
+\centering
+<<poissinfer2,fig=TRUE,echo=FALSE>>=
+<<poissinfer>>
+lines(x, p, col='red')
+@
+}
+
+
+\frame{\frametitle{Quick Review}
+\centering
+<<poissinfer3,fig=TRUE,echo=FALSE>>=
+<<poissinfer>>
+lines(x, p, col='red')
+p[x > 1] <- 0
+p[x < 0] <- 0
+p <- p / sum(p) / dx
+lines(x, p, col='darkgreen')
+@
+}
+
+
+\frame{\frametitle{Inference with Gaussians}
+Reminder:
+\[p(x;\mu,\sigma) = \frac1{\sqrt{2\pi}\sigma} e^{-\left(\frac{x-\mu}{\sqrt2\sigma}\right)^2}\]
+\[p(x;\mu,\sigma) \propto e^{-\left(\frac{x-\mu}{\sqrt2\sigma}\right)^2}\]
+}
+
+
+\frame{\frametitle{Inference with Gaussians}
+\centering
+<<gaussinfer,fig=TRUE,echo=FALSE>>=
+dx <- .01
+x <- seq(from=0, to=10, by=dx)
+p <- dnorm(x, mean=3, sd=2)
+l <- dnorm(x, mean=6, sd=1.5)
+plot(x, p, type='l', col='black', ylim=c(0, .5), bty='n', las=1)
+lines(x, l, col='red')
+abline(v=3, col='black', lty=2)
+abline(v=6, col='red', lty=2)
+@
+}
+
+
+\frame{\frametitle{Inference with Gaussians}
+\centering
+<<gaussinfer2,fig=TRUE,echo=FALSE>>=
+<<gaussinfer>>
+pp <- p * l
+pp <- pp / sum(pp) / dx
+lines(x, pp, col='darkgreen')
+mu <- sum(pp * x) / sum(pp)
+abline(v=mu, col='darkgreen', lty=2)
+@
+}
+
+
+\frame{\frametitle{Inference with Gaussians}
+\[\mathcal{N}(\mu_1,\sigma_1)*\mathcal{N}(\mu_2,\sigma_2) \propto
+e^{-\left(\frac{x-\mu_1}{\sqrt2\sigma_1}\right)^2}
+e^{-\left(\frac{x-\mu_2}{\sqrt2\sigma_2}\right)^2}\]
+\begin{align*}
+    &= 
+    e^{-\left(\frac{x-\mu_1}{\sqrt2\sigma_1}\right)^2
+    -\left(\frac{x-\mu_2}{\sqrt2\sigma_2}\right)^2} \\
+    &\propto e^{-\sigma_2^2(x-\mu_1)^2-\sigma_1^2(x-\mu_2)^2}\\
+    &= e^{-(\sigma_1^2+\sigma_2^2)x^2+2(\sigma_2^2\mu_1+\sigma_1^2\mu_2)x
+    -\sigma_2^2\mu_1^2-\sigma_1^2\mu_2^2}
+\end{align*}
+}
+
+\end{document}

@@ -1,3 +1,4 @@
+SHELL=/bin/bash
 UNAME=$(shell uname)
 
 ifeq ($(UNAME), Darwin)
@@ -16,7 +17,7 @@ makedoc = mkdir -p $(1); \
 	cp $(1).pdf ..; \
 	cd ..
 
-all: part-1.pdf part-2.pdf
+all: part-1.pdf part-2.pdf part-3.pdf
 
 clean:
 	rm *.{aux,nav,log,out,snm,toc,tex,pdf}
@@ -26,3 +27,6 @@ part-1.pdf: part-1.Rnw
 
 part-2.pdf: part-2.Rnw
 	$(call makedoc,part-2)
+
+part-3.pdf: part-3.Rnw
+	$(call makedoc,part-3)
