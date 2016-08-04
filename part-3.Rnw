@@ -14,13 +14,19 @@
 \frame{\frametitle{Quick Review}
 \centering
 We often want to estimate some parameter $\lambda$ by combining our prior expectations
-$P(\lambda)$, observations $\vec x$, and model of how observations are generated
-$P(\lambda|\vec x)$.
+$p(\lambda)$, observations $\vec x$, and model of how observations are generated
+$p(\lambda|\vec x)$.
 \vspace{12pt}\pause
 
 We do this with \textbf{Bayesian Inference:}
-\[P(\lambda|\vec x) = \frac{P(\vec x|\lambda)P(\lambda)}{
-    \int_\lambda P(\vec x|\lambda) P(\lambda) d\lambda}\]
+\[p(\lambda|\vec x) = \frac{P(\vec x|\lambda)P(\lambda)}{
+    \int_\lambda P(\vec x|\lambda) P(\lambda) d\lambda}\]\pause
+
+Note that once we have $p(\lambda|\vec x)$, we can treat it \emph{exactly how we treat a prior}.
+In particular, we can observe new evidence $\vec y$, and use the above formula to get $p(\lambda
+|\vec x, \vec y)$.\vspace{12pt}
+
+This is a system for \textbf{Belief Updating}.
 }
 
 
@@ -160,7 +166,7 @@ to model uncertainty in a probability.
 \vspace{12pt}
 
 Its pdf is:
-\[p(q) = \frac{q^{\alpha-1}(1-q)^{\beta-1}}{\mathbf{B}(\alpha,\beta)}\]
+\[p(q;\alpha,\beta) = \frac{q^{\alpha-1}(1-q)^{\beta-1}}{\mathbf{B}(\alpha,\beta)}\]
 
 Where $\mathbf{B}$ is the \textbf{Beta Function}:
 \[\mathbf{B}(\alpha, \beta) = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha+\beta)}\]
@@ -178,11 +184,101 @@ x <- seq(from=0, to=1, by=.01)
 y1 <- dbeta(x, 1, 1)
 y2 <- dbeta(x, 10, 5)
 plot(x, y2, xlab='q', ylab='p(q)', bty='n', type='l', col='blue')
-lines(x, y1)
+lines(x, y1, col='red')
 legend(.05, 2.5, c(expression(paste('(',alpha,'=1, ',beta,'=1)')),
                    expression(paste('(',alpha,'=10, ',beta,'=5)'))),
-       lty=c(1,1), col=c('black', 'blue'))
+       lty=c(1,1), col=c('red', 'blue'))
 @
+}
+
+
+\frame{\frametitle{Back to the Binomial Distribution}
+\centering
+Suppose I have a biased coin with some probability $q$ of landing on heads, but you don't know $q$.
+\vspace{12pt}\pause
+
+You see me flip the coin $n$ times, of which $k$ land on heads. What do you now believe about $q$?
+\vspace{12pt}\pause
+
+As we've seen before, the likelihood of $k$ given $q$ is
+\[p(k;n,q)={n\choose k}q^k(1-q)^{n-k}\]\pause
+
+If we have a beta distribution $\mathcal{B}(\alpha,\beta)$ as a prior, then the posterior after
+observing $k$ heads in $n$ flips is $\mathcal{B}(\alpha+k,\beta+n-k)$, which is just another beta
+distribution! \vspace{12pt}
+
+You guessed it: the beta distribution is the \textbf{Conjugate Prior} of the binomial
+distribution!
+}
+
+
+\frame{\frametitle{Back to the Binomial Distribution}
+\centering
+In this case, the parameters of our prior have a very simple interpretation:
+\vspace{12pt}
+
+Saying ``my prior is $\mathcal{B}(\alpha,\beta)$'' roughly translates to ``I'm going to pretend
+that I've already seen $\alpha+\beta$ flips, $\alpha$ of which were heads.''
+}
+
+
+\frame{\frametitle{Binomial Example}
+<<binom,fig=TRUE,echo=FALSE>>=
+x <- seq(from=0, to=1, by=.01)
+y1 <- dbeta(x, 10, 10)
+y2 <- dbeta(x, 11, 10)
+y3 <- dbeta(x, 20, 10)
+plot(x, y1, xlab='q', ylab='p(q)', bty='n', type='l', ylim=c(0,5))
+lines(x, y2, col='blue')
+lines(x, y3, col='purple')
+@
+}
+
+
+\frame{\frametitle{Binomial Example}
+<<binom2,fig=TRUE,echo=FALSE>>=
+x <- seq(from=0, to=1, by=.01)
+y1 <- dbeta(x, 100, 100)
+y2 <- dbeta(x, 101, 100)
+y3 <- dbeta(x, 110, 100)
+plot(x, y1, xlab='q', ylab='p(q)', bty='n', type='l')
+lines(x, y2, col='blue')
+lines(x, y3, col='purple')
+@
+}
+
+
+\frame{\frametitle{Flexibility Through Linear Composition}
+\centering
+Having to shoehorn our beliefs into a particular distribution can be restrictive.
+\vspace{12pt}
+
+What if you tell me that your coin is 70\% biased, but you don't tell me if it's biased for heads
+or for tails? How do I represent my beliefs, and how do I update them as you flip the coin?
+\vspace{12pt}\pause
+
+Fortunately, a linear combination of conjugate prior distributions also keeps its form after
+a belief update!
+}
+
+
+\frame{\frametitle{Binomial Example}
+<<binom3,fig=TRUE,echo=FALSE>>=
+x <- seq(from=0, to=1, by=.001)
+y1 <- dbeta(x, 700, 300) + dbeta(x, 300, 700)
+y1 <- y1 / sum(y1)
+y2 <- y1 * dbinom(7, size=10, prob=x)
+y2 <- y2 / sum(y2)
+#y3 <- dbeta(x, 110, 100)
+plot(x, y1, xlab='q', ylab='p(q)', bty='n', type='l', ylim=c(0, .03))
+lines(x, y2, col='blue')
+#lines(x, y3, col='purple')
+@
+}
+
+
+\frame{\frametitle{Homework}
+Come up with some examples for us to think about!
 }
 
 \end{document}
