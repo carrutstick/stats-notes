@@ -1,0 +1,48 @@
+\documentclass{beamer}
+
+\usepackage{amsmath}
+
+\setkeys{Gin}{width=0.9\textwidth,height=0.7\textheight}
+
+\title{Information Theory}
+\subtitle{Part 1: What is Information?}
+\author{Isaac Carruthers}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\frame{\frametitle{What is Information Theory?
+    \footnote{ Developed by {\em Claude E. Shannon} in the late 1940s}}
+How do we quantify Information?
+\begin{itemize}
+    \item If we have a noisy channel, how quickly can we communicate?
+    \item If we are uncertain about something, but become less uncertain, how do we quantify how
+        much we've learned?
+\end{itemize}
+\vspace{12pt}
+Conversely, how do we quantify {\em uncertainty}?\\
+(i.e. a lack of information)
+}
+
+\frame{\frametitle{Uncertainty of Two Systems}
+    Key question for a measure of uncertainty:
+    \vspace{12pt}
+
+    {\em If we have some system $X$ with some uncertainty $\sigma_X$, what is the uncertainty
+    of a pair of such systems, $(X,Y)$?}
+    \vspace{12pt}
+
+    Intuitively we would expect $\sigma_{X,Y} = 2 \sigma_X$.
+}
+
+\frame{\frametitle{Uncertainty of Two Systems}
+    Consider two systems with identical setup, but not necessarily identical results:
+    \vspace{12pt}
+    \begin{itemize}
+        \item Let $X_1, X_2$ and $Y_1, Y_2$ be four independent, fair coin-flips
+        \item Clearly we should have $\sigma_X=\sigma_Y$
+    \end{itemize}
+}
+
+\end{document}

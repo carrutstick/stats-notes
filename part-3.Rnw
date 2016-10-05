@@ -19,8 +19,8 @@ $p(\lambda|\vec x)$.
 \vspace{12pt}\pause
 
 We do this with \textbf{Bayesian Inference:}
-\[p(\lambda|\vec x) = \frac{P(\vec x|\lambda)P(\lambda)}{
-    \int_\lambda P(\vec x|\lambda) P(\lambda) d\lambda}\]\pause
+\[p(\lambda|\vec x) = \frac{p(\vec x|\lambda)p(\lambda)}{
+    \int_\lambda p(\vec x|\lambda) p(\lambda) d\lambda}\]\pause
 
 Note that once we have $p(\lambda|\vec x)$, we can treat it \emph{exactly how we treat a prior}.
 In particular, we can observe new evidence $\vec y$, and use the above formula to get $p(\lambda
