@@ -32,4 +32,4 @@ part-3.pdf: part-3.Rnw
 	$(call makedoc,part-3)
 
 info-1.pdf: info-1.Rnw
-    $(call makedoc,info-1)
+	$(call makedoc,info-1)

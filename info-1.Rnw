@@ -14,35 +14,61 @@
 
 \frame{\frametitle{What is Information Theory?
     \footnote{ Developed by {\em Claude E. Shannon} in the late 1940s}}
-How do we quantify Information?
-\begin{itemize}
-    \item If we have a noisy channel, how quickly can we communicate?
-    \item If we are uncertain about something, but become less uncertain, how do we quantify how
-        much we've learned?
-\end{itemize}
-\vspace{12pt}
-Conversely, how do we quantify {\em uncertainty}?\\
-(i.e. a lack of information)
+	How do we quantify Information?
+	\begin{itemize}
+		\item If we have a noisy channel, how quickly can we communicate?
+		\item If we are uncertain about something, but become less uncertain, how do we quantify
+			how much we've learned?
+		\item If we have an incomplete description of a system, how much information do we need to
+			collect before we can fully specify it?
+	\end{itemize}
+	\vspace{12pt}
+	Conversely, how do we quantify {\em uncertainty}?\\
+	(i.e. a lack of information)
 }
 
 \frame{\frametitle{Uncertainty of Two Systems}
-    Key question for a measure of uncertainty:
-    \vspace{12pt}
-
-    {\em If we have some system $X$ with some uncertainty $\sigma_X$, what is the uncertainty
-    of a pair of such systems, $(X,Y)$?}
-    \vspace{12pt}
-
-    Intuitively we would expect $\sigma_{X,Y} = 2 \sigma_X$.
-}
-
-\frame{\frametitle{Uncertainty of Two Systems}
-    Consider two systems with identical setup, but not necessarily identical results:
+    Consider the uncertainty ($\sigma$) of two systems with identical setup, but not necessarily
+	identical results:
     \vspace{12pt}
     \begin{itemize}
-        \item Let $X_1, X_2$ and $Y_1, Y_2$ be four independent, fair coin-flips
-        \item Clearly we should have $\sigma_X=\sigma_Y$
+        \item Let $X_1, X_2$ be two independent, fair coin-flips
+        \item Clearly we should have $\sigma_1=\sigma_2$
+		\item Intuitively, we would also like the uncertainty of the combined system to have the
+			property $\sigma_{1,2}=2\sigma_1=2\sigma_2$
     \end{itemize}
+    \vspace{12pt}
+	Another way to look at this: if we learn the outcome of flip 1, our uncertainty in $X_1$
+	should decrease by $\sigma_1$ and go to zero. Under any reasonable measure, the uncertainty
+	of the combined system should decrease by the same amount as the individual systems.
+}
+
+\frame{\frametitle{Uncertainty of Two Systems}
+	Intuitively, our uncertainty about a system should be related to the number of states we think
+	it could be in
+
+    \vspace{12pt}
+	In the previous example, each individual system could be in 1 of 2 states, and the combined
+	system could be in 1 of 4
+
+    \vspace{12pt}
+	When we combined the system, we multiplied the number of states they could be in, but we
+	added their uncertainties
+
+    \vspace{12pt}
+	The only functions that have this property in the general case are logarithms:
+	\[\log_b(x y) = log_b(x) + log_b(y)\]
+}
+
+\frame{\frametitle{More About Systems with Two Possibilities}
+	We are already familiar with a system like this for measuring information: bits!
+    \vspace{12pt}
+
+	If we have a system of $n$ coin-flips, there are $2^n$ possible outcomes, and we need to
+	send exactly $\log_2(2^n)=n$ bits to fully specify the outcome!
+}
+
+\frame{\frametitle{What if Some Possibilities are More Likely than Others?}
 }
 
 \end{document}
