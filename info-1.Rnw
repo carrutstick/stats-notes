@@ -69,6 +69,93 @@
 }
 
 \frame{\frametitle{What if Some Possibilities are More Likely than Others?}
+    What if some possibilities are more likely than others?
+    \vspace{12pt}
+    
+    In the simplest case, what if our coin always comes up heads?
+    \vspace{12pt}
+
+    Hopefully we all agree that there's no uncertainty here, so uncertainty should be $0$
+    \vspace{12pt}
+
+    What if there is a 75\% chance of getting heads?
+}
+
+\frame{\frametitle{What if Some Possibilities are More Likely than Others?}
+    There is a simple and neat interpolation to the variable-probability case
+    \vspace{12pt}
+
+    Rephrase our current definition in the following way:
+    \[\sigma=\log_b(n)=-\log_b\left(\frac1n\right)=-\left<\log_b(p_s)\right>_s=
+        -\sum_sp_s\log_b(p_s)\]
+    \vspace{12pt}
+
+    where the second equality only holds if all $n$ states have equal probability $p_s=\frac1n$
+}
+
+\frame{\frametitle{What if Some Possibilities are More Likely than Others?}
+\centering
+<<basic,fig=TRUE,echo=FALSE>>=
+    p <- (1:1000)/1000
+    s <- -p * log2(p) - (1-p)*log2(1-p)
+    plot(p, s, ylab=bquote(paste(sigma)), ty='l', bty='n', las=2, lwd=3)
+    abline(h=1, lty=2)
+    abline(v=0.5, lty=2)
+    abline(v=0.75, lty=3)
+    abline(h=-(0.75*log2(0.75)+0.25*log2(0.25)), lty=3)
+@
+}
+
+\frame{\frametitle{So What is Information?}
+    In this framework, we can define information as the {\em change in our uncertainty} about
+    the state of the system.
+    \vspace{12pt}
+
+    Suppose we are waiting to hear about the outcome of a coin-flip, carried out by a friend in
+    another city. We start out with uncertainty $log_2(2)=1$ bit, and after we
+    hear the result our uncertainty is 0, so we gained 1 bit on information.
+    \vspace{12pt}
+
+    If we are waiting for a 75\% biased coin, we will only gain about $0.81$ bits of information...
+    But our friend still had to send us a whole bit, so how does that work?
+}
+
+\frame{\frametitle{What About the Fractional Bits?}
+    So suppose instead of just one biased coin, we have $k$ of them.
+    \vspace{12pt}
+
+    Each one has some entropy less than 1, so in theory we should be able to transmit their
+    outcome using less than $k$ bits.
+    \vspace{12pt}
+
+    Suppose we have $k=2$ coins that are 90\% biased (each with entropy 0.47 bits); can we transmit
+    the outcome of this in fewer than 2 bits?
+}
+
+\frame{\frametitle{Two Biased Coins}
+    Two coins with $p=0.9$ have four possible outcomes: $HH$ with $p=0.81$, $HT$ and $TH$ with
+    $p=0.09$ each, and $TT$ with $p=0.01$.
+    \vspace{12pt}
+
+    Suppose we use the following coding: on $HH$ we will send 0, on $HT$ we send 10, on $TH$ 110,
+    and on $TT$ 111.
+    \vspace{12pt}
+
+    On average we will send just $1*0.81+2*0.09+3*0.09+3*0.01=1.29$ bits!
+    \vspace{12pt}
+
+    As we deal with bigger and bigger systems, we can get closer and closer to the
+    theoretical limit implied by the system's entropy.
+}
+
+\frame{\frametitle{Summary}
+    \begin{itemize}
+        \item We measure information by how much our uncertainty decreases
+        \item We measure our uncertainty with entropy
+        \item Entropy puts a lower bound on how much information we need to fully specify our
+            system
+        \item We can develop ways to encode the state of our system that approach our lower bound 
+    \end{itemize}
 }
 
 \end{document}
