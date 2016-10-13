@@ -104,8 +104,8 @@
 
 	The conditional entropy can be easily computed via the chain-rule:
 	\begin{align*}
-		H(X|Y) &= H(X,Y)-H(Y) \\
-		 &= -\frac12\left((1+p) \lg \frac{1+p}4+(1-p)\lg\frac{1-p}4\right) - 1
+		H(X|Y) &= H(X,Y)-H(Y) = H(X, Y) - 1 \\
+		I(X;Y) &= H(X) - H(X|Y) = 2 - H(X,Y)
 	\end{align*}
 }
 
@@ -122,6 +122,17 @@
 @
 
 	Note that as the two coins share more entropy, there is less total entropy in the system.
+}
+
+\frame{\frametitle{Summary}
+	\begin{itemize}
+		\item Mutual information is a measure of how much we expect one variable to tell us about
+			another.
+		\item Mutual information is symmetric: if learning $X$ tells us 5 bits about $Y$, then
+			learning $Y$ also tells us 5 bits about $X$.
+		\item The data processing inequality says that we cannot increase the mutual information
+			between two variables by applying pure functions to them.
+	\end{itemize}
 }
 
 \end{document}
