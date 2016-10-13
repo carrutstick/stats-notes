@@ -2,7 +2,7 @@ SHELL=/bin/bash
 UNAME=$(shell uname)
 
 ifeq ($(UNAME), Darwin)
-	LATEX = /usr/local/texlive/2014/bin/x86_64-darwin/pdflatex
+	LATEX = /Library/TeX/texbin/pdflatex
 else
 	LATEX = pdflatex
 endif
@@ -17,7 +17,7 @@ makedoc = mkdir -p $(1); \
 	cp $(1).pdf ..; \
 	cd ..
 
-all: part-1.pdf part-2.pdf part-3.pdf info-1.pdf
+all: part-1.pdf part-2.pdf part-3.pdf info-1.pdf info-2.pdf
 
 clean:
 	rm *.{aux,nav,log,out,snm,toc,tex,pdf}
@@ -33,3 +33,6 @@ part-3.pdf: part-3.Rnw
 
 info-1.pdf: info-1.Rnw
 	$(call makedoc,info-1)
+
+info-2.pdf: info-2.Rnw
+	$(call makedoc,info-2)

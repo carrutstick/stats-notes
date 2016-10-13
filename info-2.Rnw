@@ -1,0 +1,128 @@
+\documentclass{beamer}
+
+\usepackage{amsmath}
+
+\setkeys{Gin}{width=0.9\textwidth,height=0.7\textheight}
+
+\title{Information Theory}
+\subtitle{Part 2: Mutal Information etc.}
+\author{Isaac Carruthers}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\frame{\frametitle{Review}
+	\begin{itemize}
+		\item If we have a system $X$ with $n$ possible states, each with some probability $p_i$,
+			we can measure our uncertainty about the state of the system using the {\em entropy}:
+			\[H(X) = -\sum_i p_i \lg(p_i)\]
+		\item When we learn something new about the system (and so update our $p_i$), we define
+			our {\em information gain} by how much we have reduced the entropy of the system:
+			\[I_{1,2} = H_1 - H_2\]
+		\item The {maximum entropy} that a system can have is when $p_i=\frac1n$ for all $i$.
+		\item When a system has lower entropy, we can construct codes to
+			represent the state of the system using fewer bits (on average) than we
+			would need to represent a higher entropy version of the system.
+	\end{itemize}
+}
+
+\frame{\frametitle{Conditional Entropy}
+	If two random variables are not independent, then learning the value of one of them will
+	change our distribution for the other.
+	\vspace{12pt}
+
+	We commonly represent this using {\em conditional distributions}:
+	\[P(X=x|Y=y) = \frac{P(X=x,Y=y)}{P(Y=y)}\]
+
+	The {\em conditional entropy} is just the expected entropy of the conditional distribution:
+	\begin{align*}
+		H(X|Y) &= \sum_y P(y)H(X|Y=y) \\
+		 &= -\sum_yP(y) \sum_x P(x|y) \lg P(x|y) \\
+		 &= -\sum_y\sum_x P(x,y) \lg\left(\frac{P(x,y)}{P(y)}\right)
+	\end{align*}
+}
+
+\frame{\frametitle{Conditional Entropy}
+	A cute result:
+	\begin{align*}
+		H(X|Y) &= -\sum_y\sum_x P(x,y) \lg\left(\frac{P(x,y)}{P(y)}\right) \\
+		 &= -\sum_{x,y} P(x,y) \lg P(x,y) + \sum_{x,y} P(x,y) \lg P(y) \\
+		 &= -\sum_{x,y} P(x,y) \lg P(x,y) + \sum_y P(y) \lg P(y) \\
+		 &= H(X,Y) - H(X)
+	\end{align*}
+
+	This should make a lot of sense: if it takes $H(X,Y)$ bits to specify the whole system, and
+	we learn the value of $X$, then that should be $H(X)$ bits that we no longer have to specify.
+	\vspace{12pt}
+
+	This result is called the {\em chain rule}  in probability theory.
+}
+
+\frame{\frametitle{Mutual Information}
+	The {\em mutual information} between two variables is defined as the amount we expect to
+	learn about one of them by learning the value of the other:
+	\[I(X;Y) = H(X) - H(X|Y)\]
+
+	Working this out, we get
+	\begin{align*}
+		I(X;Y) &=-\sum_xP(x)\lg P(x) + \sum_y\sum_xP(x,y)\lg\left(\frac{P(x,y)}{P(y)}\right) \\
+		 &= -\sum_y\sum_xP(x,y)\lg P(x) + \sum_y\sum_xP(x,y)\lg\left(\frac{P(x,y)}{P(y)}\right) \\
+		 &= \sum_x\sum_yP(x,y)\lg\left(\frac{P(x,y)}{P(x)P(y)}\right)
+	\end{align*}
+}
+
+\frame{\frametitle{Mutual Information}
+	\[I(X;Y) = \sum_x\sum_yP(x,y)\lg\left(\frac{P(x,y)}{P(x)P(y)}\right)\]
+
+	Note that $I(X;Y)$ is symmetric with respect to $x$ and $y$, so $I(X;Y)=I(Y;X)$.
+	\vspace{12pt}
+
+	This means that learning the value of $X$ tells us as much about the value of $Y$ as learning
+	$Y$ tells us about the value of $X$, no matter their distributions!
+}
+
+\frame{\frametitle{The Data Processing Inequality}
+	Something that should make sense is that
+	\[I(X;Y) \geq I\left(F(X); G(Y)\right)\]
+	for any functions $F$ and $G$.
+	\vspace{12pt}
+
+	What this means is that you should never be able to extract more information from your system
+	just by transforming it.
+}
+
+\frame{\frametitle{Mutual Information Example}
+	Suppose we have two fair coins $X$ and $Y$, but if the second coin comes up
+	different from the first coin then with probability $p$ we will flip it
+	over so the coins are the same.
+	\vspace{12pt}
+
+	The probabilities of our states are $\frac14(1+p)$ for $HH$ and $TT$, and $\frac14(1-p)$
+	for $TH$ and $HT$, for a total entropy of
+	\[H(X,Y)=-\frac12\left((1+p) \lg \frac{1+p}4+(1-p)\lg\frac{1-p}4\right)\]
+
+	The conditional entropy can be easily computed via the chain-rule:
+	\begin{align*}
+		H(X|Y) &= H(X,Y)-H(Y) \\
+		 &= -\frac12\left((1+p) \lg \frac{1+p}4+(1-p)\lg\frac{1-p}4\right) - 1
+	\end{align*}
+}
+
+\frame{\frametitle{Mutual Information Example}
+<<basic,fig=TRUE,echo=FALSE>>=
+	p <- (0:1000)/1000
+	h <- -0.5 * ( (1+p)*log2(0.25*(1+p)) + (1-p)*log2(0.25*(1-p)) )
+	c <- h - 1
+	i <- 1 - c
+	plot(p, h, bty='n', las=2, xlab='p', ylab='', ty='l', ylim=c(0,2))
+	lines(p, i, col='red')
+	text(0, 1.75, 'Total entropy', adj=c(0,0.5))
+	text(0, 0.25, 'Mutual information', adj=c(0,0.5), col='red')
+@
+
+	Note that as the two coins share more entropy, there is less total entropy in the system.
+}
+
+\end{document}
+
