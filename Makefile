@@ -17,7 +17,7 @@ makedoc = mkdir -p $(1); \
 	cp $(1).pdf ..; \
 	cd ..
 
-all: part-1.pdf part-2.pdf part-3.pdf info-1.pdf info-2.pdf
+all: part-1.pdf part-2.pdf part-3.pdf info-1.pdf info-2.pdf finance-1.pdf
 
 clean:
 	rm *.{aux,nav,log,out,snm,toc,tex,pdf}
@@ -36,3 +36,6 @@ info-1.pdf: info-1.Rnw
 
 info-2.pdf: info-2.Rnw
 	$(call makedoc,info-2)
+
+finance-1.pdf: finance-1.Rnw
+	$(call makedoc,finance-1)

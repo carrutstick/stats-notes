@@ -115,7 +115,7 @@
 	h <- -0.5 * ( (1+p)*log2(0.25*(1+p)) + (1-p)*log2(0.25*(1-p)) )
 	c <- h - 1
 	i <- 1 - c
-	plot(p, h, bty='n', las=2, xlab='p', ylab='', ty='l', ylim=c(0,2))
+	plot(p, h, bty='n', las=2, xlab='p', ylab='bits', ty='l', ylim=c(0,2))
 	lines(p, i, col='red')
 	text(0, 1.75, 'Total entropy', adj=c(0,0.5))
 	text(0, 0.25, 'Mutual information', adj=c(0,0.5), col='red')

@@ -1,0 +1,16 @@
+\documentclass{beamer}
+
+\usepackage{amsmath}
+
+\setkeys{Gin}{width=0.9\textwidth,height=0.7\textheight}
+
+
+\title{Finance}
+\subtitle{Part 1: Discounts and Leverage}
+\author{Isaac Carruthers}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\end{document}
