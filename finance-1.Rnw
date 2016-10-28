@@ -1,6 +1,7 @@
 \documentclass{beamer}
 
 \usepackage{amsmath}
+\usepackage{wasysym}
 
 \setkeys{Gin}{width=0.9\textwidth,height=0.7\textheight}
 
@@ -12,5 +13,161 @@
 \begin{document}
 
 \frame{\titlepage}
+
+\frame{\frametitle{What is Value?}
+	\begin{itemize}
+		\item Value is how much something can improve your life.
+		\item In a world where things can be traded and exchanged, value is
+			also related to how much something can improve {\em anyone's} life.
+		\item We can then approximate the value of something as equivalent to
+			the most valuable thing we can get in exchange for it.
+		\item To simplify things, we're generally going to talk about valuing things in terms of
+			dollars... but it's still not as simple as it sounds.
+	\end{itemize}
+}
+
+\frame{\frametitle{Things We're Going to Ignore}
+	\begin{itemize}
+		\item We're going to pretend that transactions are free and instant.
+		\item Alternatively, We're going to assume that we will make any trade that benefits us
+			financially, no matter how small the benefit. If something is for sale for any
+			amount less than its value to us, we will buy it. If someone offers to buy it at any
+			amount greater than its value, we will sell it.
+		\item We're going to assume that we are rational.
+		\item We're going to assume that we're not going to suddenly need money.
+	\end{itemize}
+}
+
+\frame{\frametitle{What is the Value of a Dollar?}
+	Are any two dollars today worth the same?
+	\vspace{12pt}\pause
+
+	Yes.
+	\vspace{12pt}\pause
+
+	Is a dollar today worth the same as a dollar next year?
+	\pause
+	\begin{itemize}
+		\item Inflation
+		\item Uncertainty
+		\item Opportunity cost
+	\end{itemize}
+}
+
+\frame{\frametitle{How do we Account for Changes in the Value of a Dollar?}
+	{\bf Inflation:} \pause Easy. If inflation is 2\%, then a dollar in a year is worth 2\cent
+	\; less today.
+	\pause \vspace{12pt}
+
+	{\bf Opportunity Cost:} \pause Easy. If we can invest 96\cent\; and get a dollar
+	back in a year (risk free), then a dollar in a year is worth 4\cent\; less today.
+	\pause \vspace{12pt}
+
+	{\bf Uncertainty:} \pause Hard. Usually we just make something up. Maybe I think that the
+	promise of a dollar from Sadie is worth 4\cent\; less than a dollar in my hand, but a
+	promise from Sean is only worth 2\cent\; less.
+}
+
+\frame{\frametitle{The Discount Rate}
+	For any future cash flows, we can combine our three concerns to arrive at a {\em discount
+	rate}, describing how the value of the money changes with when we're supposed to get it or
+	give it up.
+	
+	\vspace{12pt}
+	We can use the discount rate to define the {\em present value} (PV) of any future transfer
+	of money. That is, if we could buy or sell the promise of some future transfer, we define
+	the value at which we would be willing to buy or sell it as the PV of that transfer.
+}
+
+\frame{\frametitle{Present Value}
+	There is a magic gosling which in one year will lay exactly one golden egg worth
+	\$1000, and then disappear. How much should you pay for the gosling? What is its {\em present
+	value}?
+
+	\vspace{12pt}\pause
+	If your discount rate is 8\%, then you should pay no more than $(1 - 0.08) * 1000 = 920$
+	dollars.
+
+	\vspace{12pt}\pause
+	We buy the gosling, but then when we go and double-check our grimoire, we find out that magic
+	geese don't lay their egg until they are {\bf 2} years old, not 1! What is the goose worth to
+	us now? How much would someone need to pay us to take it off our hands? (Hint: how much
+	will the goose be worth to us in a year?)
+
+	\vspace{12pt}\pause
+	If you wait a year, we'll be back in the situation we imagined when we bought the goose,
+	so in a year the goose will be worth \$920. How much would you pay now to get \$920 in
+	a year? Clearly it's $(1-0.08)*920 = (1-0.08)^2*1000\approx 846$ dollars.
+}
+
+\frame{\frametitle{Mathematical Digression}
+	You may have realized that not all contracts will last exactly a year. How do we deal with
+	that?
+	\vspace{12pt}\pause
+
+	What we're really doing with our $(1 - r)^n$ discount factor is approximating the formula
+	for {\em continuously compounded interest}, $e^{-rt}$.
+	\vspace{12pt}
+
+	This approximation is good when $r$ is small, and in general it is fine anyway, because we
+	cannot actually re-invest our money continuously.
+}
+
+\frame{\frametitle{Example: Valuing a Coupon Bond}
+	A {\em bond} is just a form of debt. If you own a bond, it means someone owes you money.
+	\vspace{12pt}
+
+	Bonds come in many forms. One common form is a {\em coupon bond}, which is a bond that
+	makes small interest payments (called the coupon) throughout the life of the bond
+	(often bianually), and then pays back the principal at the end.
+	\vspace{12pt}
+
+	For instance, the US treasury may offer a \$1Mil, 10-year bond at a 2\% yield. If we bought
+	this bond, the cash-flows would look like this:
+	\begin{itemize}
+		\item Spend \$1Mil to buy the bond at time 0.
+		\item Receive \$10k coupon at time 6 months.
+		\item Receive \$10k coupon at time 1 year.
+		\item \ldots
+		\item Receive \$1.01Mil at time 10 years.
+	\end{itemize}
+}
+
+\frame{\frametitle{Example: Valuing a Coupon Bond}
+	How do we value a complicated thing like a bond?\pause
+
+	Just come up with a discount rate $r$, and sum the values of the individual transfers!
+	\begin{align*}
+		PV(B) &= -1e6 + (1 - r)^{\frac12}1e4 + (1-r)1e4 + \cdots\\
+		&\hphantom{=} + (1-r)^{9.5}1e4 + (1-r)^{10}1.01e6
+	\end{align*}
+}
+
+\frame{\frametitle{Example: Valuing a Coupon Bond}
+<<bond1,fig=TRUE,echo=FALSE>>=
+	r <- (0:500) / 10000
+	val <- function(r) {
+		s <- -1e6
+		for (i in 1:19) s <- s + 1e4 * (1 - r)^(i/2)
+		s <- s + 1.01e6 * (1 - r)^10 }
+	v <- val(r)
+	plot(r, v, ty='l', bty='n', las=1, col='red')
+	abline(v=.02, lty=2)
+	abline(h=0, col='gray'); abline(v=0, col='gray')
+@
+}
+
+\frame{\frametitle{Internal Rate of Return (IRR)}
+	Looking at the PV of a deal is one way to look at what you can do with your resources, but
+	it's not a very good way (a deal where you put up \$1Mil to get back \$1.1Mil is very
+	different from one where you put up \$100k to get back \$200k, but both have the same PV).
+	\vspace{12pt}
+
+	A more standard way of evaluating options is the {\em Internal Rate of Return} (IRR).
+	\vspace{12pt}
+
+	The IRR is the discount rate at which a deal's PV becomes zero. In our bond example above,
+	the IRR is 2\%.
+}
 
 \end{document}
