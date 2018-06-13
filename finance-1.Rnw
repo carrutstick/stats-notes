@@ -7,7 +7,7 @@
 
 
 \title{Finance}
-\subtitle{Part 1: Discounts and Leverage}
+\subtitle{Part 1: Basic Theory of Value}
 \author{Isaac Carruthers}
 
 \begin{document}
@@ -135,6 +135,7 @@
 
 \frame{\frametitle{Example: Valuing a Coupon Bond}
 	How do we value a complicated thing like a bond?\pause
+    \vspace{12pt}
 
 	Just come up with a discount rate $r$, and sum the values of the individual transfers!
 	\begin{align*}

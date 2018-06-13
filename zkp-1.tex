@@ -1,0 +1,31 @@
+\documentclass{beamer}
+
+\usepackage{amsmath}
+\usepackage{tikz}
+
+\title{Zero-Knowledge Proofs}
+\subtitle{Part 1: Knowing More Than Zero}
+\author{Isaac Carruthers}
+
+\tikzset{
+    pics/my hat graph/.style 2 args={
+        code={
+            \node[draw] at (0,0) (a) {A};
+            \node[draw] at (0,1) (b) {B};
+            \draw[] (a) -- (b);
+        }
+    }
+}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\frame{\frametitle{A Problem}
+\centering
+\begin{tikzpicture}
+    \draw pic {my hat graph=a/b};
+\end{tikzpicture}
+}
+
+\end{document}
